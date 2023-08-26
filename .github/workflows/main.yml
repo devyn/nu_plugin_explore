@@ -84,8 +84,7 @@ jobs:
       - name: Install nu_plugin_explore
         run: |
           cargo install --path . --root /tmp/cargo-install/
-          nu --commands $register /tmp/cargo-install/bin/nu_plugin_explore"
-        shell: nu
+          nu --commands "register /tmp/cargo-install/bin/nu_plugin_explore"
 
       - name: Test the default config
         run: |
@@ -94,4 +93,4 @@ jobs:
                   | insert colors (open examples/configuration/themes/dark.nuon)
                   | insert keybindings (open examples/configuration/keybindings.nuon)
           )
-        shell: nu
+        shell: nu {0}
