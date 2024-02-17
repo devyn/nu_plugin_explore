@@ -281,7 +281,7 @@ mod tests {
         cell_path::{to_path_member_vec, PM},
         value::{transpose, Table},
     };
-    use nu_protocol::{ast::CellPath, record, Config, Value};
+    use nu_protocol::{ast::CellPath, record, Config, Type, Value};
 
     fn default_value_repr(value: &Value) -> String {
         value.into_string(" ", &Config::default())
@@ -501,7 +501,7 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&not_a_table_missing_field),
-            Table::IsTable,
+            Table::RowIncompatibleLen(1, 2, 1),
             "{} should not be a table",
             default_value_repr(&not_a_table_missing_field)
         );
@@ -518,12 +518,17 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&not_a_table_incompatible_types),
-            Table::IsTable,
+            Table::RowIncompatibleType(
+                1,
+                "b".to_string(),
+                Type::List(Box::new(Type::Int)),
+                Type::Int
+            ),
             "{} should not be a table",
             default_value_repr(&not_a_table_incompatible_types)
         );
 
-        assert_eq!(is_table(&Value::test_int(0)), Table::IsTable);
+        assert_eq!(is_table(&Value::test_int(0)), Table::NotAList);
     }
 
     #[test]
