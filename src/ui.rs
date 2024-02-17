@@ -279,16 +279,14 @@ fn render_data<B: Backend>(frame: &mut Frame<'_, B>, app: &App, config: &Config)
             crate::nu::value::Table::IsTable => unreachable!(),
         };
 
-        if msg.is_some() {
+        if let Some(msg) = msg {
             data_frame_height -= 1;
             frame.render_widget(
-                Paragraph::new(msg.unwrap())
-                    .alignment(Alignment::Right)
-                    .style(
-                        Style::default()
-                            .bg(config.colors.warning.background)
-                            .fg(config.colors.warning.foreground),
-                    ),
+                Paragraph::new(msg).alignment(Alignment::Right).style(
+                    Style::default()
+                        .bg(config.colors.warning.background)
+                        .fg(config.colors.warning.foreground),
+                ),
                 Rect::new(0, data_frame_height, frame.size().width, 1),
             );
         }
