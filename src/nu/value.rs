@@ -12,7 +12,7 @@ pub(crate) enum Table {
     RowIncompatibleLen(usize, usize, usize),
     RowIncompatibleType(usize, String, Type, Type),
     RowInvalidKey(usize, String, Vec<String>),
-    IsTable,
+    IsValid,
     NotAList,
 }
 
@@ -145,7 +145,7 @@ pub(crate) fn is_table(value: &Value) -> Table {
                 }
             }
 
-            Table::IsTable
+            Table::IsValid
         }
         _ => Table::NotAList,
     }
@@ -180,7 +180,7 @@ pub(crate) fn is_table(value: &Value) -> Table {
 /// }
 /// ```
 pub(crate) fn transpose(value: &Value) -> Value {
-    if matches!(is_table(value), Table::IsTable) {
+    if matches!(is_table(value), Table::IsValid) {
         let value_rows = match value {
             Value::List { vals, .. } => vals,
             _ => return value.clone(),
@@ -434,7 +434,7 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&table),
-            Table::IsTable,
+            Table::IsValid,
             "{} should be a table",
             default_value_repr(&table)
         );
@@ -451,7 +451,7 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&table_with_out_of_order_columns),
-            Table::IsTable,
+            Table::IsValid,
             "{} should be a table",
             default_value_repr(&table_with_out_of_order_columns)
         );
@@ -468,7 +468,7 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&table_with_nulls),
-            Table::IsTable,
+            Table::IsValid,
             "{} should be a table",
             default_value_repr(&table_with_nulls)
         );
@@ -485,7 +485,7 @@ mod tests {
         ]);
         assert_eq!(
             is_table(&table_with_number_colum),
-            Table::IsTable,
+            Table::IsValid,
             "{} should be a table",
             default_value_repr(&table_with_number_colum)
         );

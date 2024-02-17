@@ -250,7 +250,7 @@ fn render_data<B: Backend>(frame: &mut Frame<'_, B>, app: &App, config: &Config)
         });
 
     let table_type = is_table(&value);
-    let is_a_table = matches!(table_type, crate::nu::value::Table::IsTable);
+    let is_a_table = matches!(table_type, crate::nu::value::Table::IsValid);
 
     let mut data_frame_height = if config.show_cell_path {
         frame.size().height - 2
@@ -276,7 +276,7 @@ fn render_data<B: Backend>(frame: &mut Frame<'_, B>, app: &App, config: &Config)
                 i, k, ks
             )),
             crate::nu::value::Table::NotAList => None,
-            crate::nu::value::Table::IsTable => unreachable!(),
+            crate::nu::value::Table::IsValid => unreachable!(),
         };
 
         if let Some(msg) = msg {
